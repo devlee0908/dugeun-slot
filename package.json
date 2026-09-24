@@ -1,0 +1,19 @@
+{
+  "name": "dugeun-slot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "두근슬롯 - 함께 돌리는 연애 수다 카드 (정적 모바일 웹)",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "validate": "node scripts/validate-content.mjs",
+    "test": "node --test tests/*.test.mjs && node scripts/validate-content.mjs",
+    "e2e": "node tests/e2e.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "puppeteer-core": "25.11.0"
+  }
+}

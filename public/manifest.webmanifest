@@ -1,0 +1,14 @@
+{
+  "name": "두근슬롯 · 함께 돌리는 연애 수다 카드",
+  "short_name": "두근슬롯",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFF9F4",
+  "theme_color": "#FFE4EB",
+  "lang": "ko",
+  "icons": [
+    { "src": "assets/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
