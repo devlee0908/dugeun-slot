@@ -222,18 +222,24 @@ try {
   await saveShare(page, 'share-talk', true);
   log('대화 카드 → 1080×1350 PNG 생성, 미리보기/저장 제공');
 
-  /* ---------- 7. Home & persistence ---------- */
-  console.log('\n[7] 처음 화면 복귀 · 새로고침 유지');
+  /* ---------- 7. Home / reload start a new game (no resume) ---------- */
+  console.log('\n[7] 처음 화면 복귀 · 새로고침 시 새 판');
   const before = await state(page);
-  await page.reload({ waitUntil: 'networkidle0' });
-  await waitCard(page);
-  const after = await state(page);
-  assert.equal(after.currentId, before.currentId);
-  assert.deepEqual(after.settings, before.settings);
   await page.click('.topbar__home');
   await page.waitForSelector('.home');
-  assert.ok(await page.$('a[href="#/play"]'), 'resume button');
-  log('새로고침 후 현재 카드/설정 유지, 처음 화면에 「이어서 하기」');
+  assert.equal(await page.$('a[href="#/play"]'), null, 'resume button must not exist');
+  assert.deepEqual((await state(page)).seen, [], 'going home ends the game');
+  await page.goBack();
+  await page.waitForSelector('#setup-form');
+  log('처음 화면에 「이어서 하기」 없음, 뒤로 가기로 진행 화면에 돌아가지 않고 설정 화면으로 이동');
+  await page.goto(`${BASE}/#/play`, { waitUntil: 'networkidle0' });
+  await page.waitForSelector('#setup-form');
+  const after = await state(page);
+  assert.equal(after.currentId, null);
+  assert.deepEqual(after.seen, []);
+  assert.deepEqual(after.settings, before.settings);
+  assert.equal(await page.evaluate(() => sessionStorage.length), 0, 'no progress stored');
+  log('새로고침/직접 접속 시 진행 상태 없이 설정 화면으로 이동 (설정만 기억)');
   await page.close();
 
   /* ---------- 8. Filtering matrix via UI ---------- */

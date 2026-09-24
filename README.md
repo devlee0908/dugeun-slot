@@ -138,7 +138,7 @@ UI는 `repository.listItems()`로 콘텐츠 배열만 받고, 무엇을 보여�
 
 - 서버로 보내는 데이터가 없습니다. 심리테스트 답변과 결과는 저장하지도 전송하지도 않습니다.
 - `localStorage`: 마지막 설정, 효과음 on/off
-- `sessionStorage`: 이번 판에서 본 카드 ID, 현재 카드 (탭을 닫으면 삭제)
+- 이번 판에서 본 카드와 현재 카드는 메모리에만 두며, 새로고침하거나 처음 화면으로 돌아가면 새 판이 시작됩니다 (이어서 하기 기능 없음).
 - 외부 요청은 웹폰트(Google Fonts의 Jua, jsDelivr의 Pretendard)뿐입니다. 필요하면 `public/assets`에 폰트를 직접 넣어 셀프 호스팅하세요.
 
 ## 앞으로: 관리자 화면 · API · DB

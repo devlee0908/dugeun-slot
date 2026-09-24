@@ -1,7 +1,7 @@
 import { createContentRepository } from './content/repository.js';
 import { GROUP_BY_ID, LIST_BY_ID, TOPICS, TYPE_BY_ID, describeSettings, sanitizeSettings } from './content/meta.js';
 import { countStatus, drawNext, filterContent, suggestAlternatives } from './content/query.js';
-import { clearProgress, loadProgress, loadSettings, loadSound, saveProgress, saveSettings, saveSound } from './state.js';
+import { loadSettings, loadSound, saveSettings, saveSound } from './state.js';
 import { renderCard, renderEmptyCard, renderEndCard, renderMatchInfo, renderSetupForm, readSetupForm, stickerTitle } from './ui/cards.js';
 import { $, $$, escapeHtml as e, prefersReducedMotion, toast } from './ui/dom.js';
 import { logoMark, visualMarkup } from './ui/illustrations.js';
@@ -17,7 +17,7 @@ const state = {
   settings: loadSettings(),
   seen: new Set(),
   currentId: null,
-  view: {},
+  view: { votes: {}, viewed: new Set() },
   busy: false,
   slot: null,
   spinToken: 0,
@@ -30,7 +30,6 @@ const state = {
 
 const current = () => state.items.find((i) => i.id === state.currentId) || null;
 const status = (s = state.settings) => countStatus(state.items, s, state.seen);
-const persist = () => saveProgress({ seen: state.seen, currentId: state.currentId });
 
 /* ---------------- routing ---------------- */
 
@@ -51,10 +50,16 @@ const go = (path) => {
 
 /* ---------------- home ---------------- */
 
+function resetGame() {
+  state.seen = new Set();
+  state.currentId = null;
+  state.view = { votes: {}, viewed: new Set() };
+}
+
 function renderHome() {
+  resetGame();
   document.title = '두근슬롯 · 함께 돌리는 연애 수다 카드';
   const count = (t) => state.items.filter((i) => i.type === t).length;
-  const resume = state.currentId && current();
   app.innerHTML = `<div class="screen home">
     <div class="deco" aria-hidden="true">
       <span class="deco__b deco__b--1">${visualMarkup({ kind: 'balloon', color: '#FF8FAB' })}</span>
@@ -70,7 +75,6 @@ function renderHome() {
         <p class="home__desc">밸런스 게임 · 대화 질문 · 심리테스트를<br>한 대의 폰으로 돌려 보며 함께 즐겨요.</p>
         <div class="home__cta">
           <a class="btn btn--primary btn--xl" href="#/setup" data-testid="start">시작하기</a>
-          ${resume ? '<a class="btn btn--ghost" href="#/play">이어서 하기</a>' : ''}
         </div>
         <ul class="home__stats" aria-label="준비된 카드">
           <li><b>${count('balance')}</b>밸런스 게임</li>
@@ -160,6 +164,11 @@ function syncTopicChecks(form, changed) {
 /* ---------------- play ---------------- */
 
 function renderPlay() {
+  const item = current();
+  if (!state.pendingSpin && !item && !state.seen.size) {
+    location.replace('#/setup');
+    return;
+  }
   document.title = '플레이 · 두근슬롯';
   app.innerHTML = `<div class="screen play">
     ${topbar({ play: true })}
@@ -167,7 +176,6 @@ function renderPlay() {
     <main class="stage" id="stage" tabindex="-1"></main>
     <footer class="actionbar" id="actionbar"></footer>
   </div>`;
-  const item = current();
   if (state.pendingSpin || !item) {
     state.pendingSpin = false;
     spin();
@@ -215,7 +223,6 @@ function spin() {
   if (!next) {
     const st = status();
     state.currentId = null;
-    persist();
     state.suggestions = st.total ? [] : suggestAlternatives(state.items, state.settings);
     stage.innerHTML = st.total ? renderEndCard(st, state.settings.type) : renderEmptyCard(state.suggestions, state.settings.type);
     updateProgress();
@@ -226,7 +233,6 @@ function spin() {
   state.seen.add(next.id);
   state.currentId = next.id;
   state.view = { votes: {}, viewed: new Set() };
-  persist();
   updateProgress();
   renderActions();
   $$('.cond-chip').forEach((b) => (b.disabled = true));
@@ -370,6 +376,7 @@ const actions = {
   start() {
     if (!status().total) return;
     saveSettings(state.settings);
+    resetGame();
     state.pendingSpin = true;
     go('play');
   },
@@ -415,7 +422,6 @@ const actions = {
   },
   reshuffle() {
     for (const i of filterContent(state.items, state.settings)) state.seen.delete(i.id);
-    persist();
     spin();
   },
   'open-settings': openSettings,
@@ -517,12 +523,6 @@ async function boot() {
     </div></div>`;
     return;
   }
-  const p = loadProgress();
-  const known = new Set(state.items.map((i) => i.id));
-  state.seen = new Set([...p.seen].filter((id) => known.has(id)));
-  state.currentId = known.has(p.currentId) ? p.currentId : null;
-  state.view = { votes: {}, viewed: new Set() };
-  if (!state.currentId && !state.seen.size) clearProgress();
   window.addEventListener('hashchange', route);
   route();
   document.documentElement.classList.add('is-ready');
