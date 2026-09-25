@@ -391,7 +391,7 @@
     "audience": {
       "couple": 1,
       "some": 1,
-      "solo": 2,
+      "solo": 1,
       "friends": 2,
       "free": 1
     },
@@ -1845,7 +1845,7 @@
     "audience": {
       "couple": 1,
       "some": 1,
-      "solo": 2,
+      "solo": 1,
       "friends": 2,
       "free": 1
     },

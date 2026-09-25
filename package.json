@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "node scripts/serve.mjs",
     "validate": "node scripts/validate-content.mjs",
+    "review": "node scripts/review-content.mjs",
     "test": "node --test tests/*.test.mjs && node scripts/validate-content.mjs",
     "e2e": "node tests/e2e.mjs",
     "devices": "node tests/devices.mjs",

@@ -25,6 +25,7 @@ npm run dev          # http://localhost:5173  (같은 Wi-Fi의 휴대폰에서�
 | --- | --- |
 | `npm test` | 조회 로직 단위 테스트 + 콘텐츠 검증 |
 | `npm run validate` | 콘텐츠 JSON 검증 (`-- --coverage`를 붙이면 유형×모임×주제별 개수표 출력) |
+| `npm run review` | 톤 검수 리포트: 비슷한 질문·결과 제목, 자주 쓰인 끝맺음, 단정적인 해석, 민감 단어와 해당 모임 적합도를 보여줌 (통과/실패 없이 참고용) |
 | `npm run e2e` | 실제 Chrome(headless)으로 전체 흐름 검사, 스크린샷을 `tests/screens/`에 저장 (`npm run dev` 실행 중이어야 함) |
 | `npm run devices` | iPhone SE·iPhone 15 Pro·iPad mini(WebKit = Safari 엔진), Galaxy S9+·Pixel 7(Chrome) 프로필로 핵심 흐름 스모크 테스트. 처음 한 번 `npx playwright-core install webkit` 필요 |
 | `npm run fonts` | 자체 호스팅 웹폰트(Jua, Pretendard)를 다시 내려받기 |
