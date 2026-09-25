@@ -450,6 +450,14 @@ a { text-decoration: none; }
 .sheet__note { margin: 0 0 12px; font-size: 13.5px; color: var(--ink-soft); }
 .sheet__foot { position: sticky; bottom: calc(-18px - var(--safe-b)); padding: 12px 0 0; background: linear-gradient(to top, var(--page) 80%, rgba(255, 243, 245, 0)); display: grid; gap: 8px; margin-top: 12px; }
 .sheet__buttons { display: flex; gap: 10px; }
+.sheet__buttons .btn { white-space: nowrap; padding: 0 14px; }
+.sheet__buttons .btn--ghost { flex: none; }
+@media (max-width: 360px) {
+  .sheet__buttons .btn { font-size: 16.5px; padding: 0 12px; }
+  .chips--type .chip__face { padding: 10px 3px; }
+  .chips--type .chip__text { font-size: 13.5px; overflow-wrap: normal; }
+  .chips--type .chip__text small { font-size: 11px; }
+}
 .sheet--share .sheet__note { text-align: center; margin: 12px 0; }
 .share__img { display: block; width: 100%; max-width: 360px; height: auto; margin: 8px auto 0; border-radius: 18px; border: 3px solid var(--maroon); box-shadow: 0 6px 0 rgba(122, 26, 38, 0.3); }
 @media (min-width: 700px) {

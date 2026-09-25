@@ -28,7 +28,8 @@ async function newPage(viewport = MOBILE) {
   const page = await browser.newPage();
   await page.setViewport(viewport);
   page.on('pageerror', (err) => errors.push(`pageerror: ${err.message}`));
-  page.on('console', (m) => { if (m.type() === 'error' && !/fonts\.g|jsdelivr|Failed to load resource/.test(m.text())) errors.push(`console: ${m.text()}`); });
+  page.on('console', (m) => { if (m.type() === 'error') errors.push(`console: ${m.text()}`); });
+  page.on('request', (req) => { if (/^https?:/.test(req.url()) && !req.url().startsWith(new URL(BASE).origin)) errors.push(`external request: ${req.url()}`); });
   return page;
 }
 
@@ -78,6 +79,12 @@ try {
   const page = await newPage();
   await page.goto(BASE, { waitUntil: 'networkidle0' });
   await page.waitForSelector('.home .wordmark');
+  const loadedFonts = await page.evaluate(async () => {
+    await document.fonts.ready;
+    return [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family.replace(/"/g, ''));
+  });
+  assert.ok(loadedFonts.includes('Jua') && loadedFonts.includes('Pretendard Variable'), `fonts: ${loadedFonts}`);
+  log('자체 호스팅 글꼴(Jua, Pretendard) 로드 확인');
   await shot(page, 'mobile-home', { fullPage: true });
   log('첫 화면: 로고/소개/시작하기 표시');
 
