@@ -3,7 +3,8 @@ import { readFile } from 'node:fs/promises';
 import { GROUPS, TOPICS, TYPES, TAGS } from '../public/src/content/meta.js';
 import { coverage } from '../public/src/content/query.js';
 
-const MIN = { balance: 20, talk: 20, psych: 15 };
+const MIN = { balance: 60, talk: 60, psych: 60 };
+const MIN_PER_COMBO = 10; // cards per type × topic × group (ALL list)
 const VISUAL_KINDS = new Set(['emoji', 'balloon', 'heartBalloon', 'balloonDog', 'door', 'umbrella', 'gift']);
 const groupIds = GROUPS.map((g) => g.id);
 const topicIds = new Set(TOPICS.map((t) => t.id));
@@ -26,6 +27,7 @@ function checkVisual(id, v) {
 }
 
 export function validate(items) {
+  errors.length = 0;
   const ids = new Set();
   for (const item of items) {
     const id = item.id ?? '(no id)';
@@ -73,6 +75,22 @@ export function validate(items) {
   for (const [type, min] of Object.entries(MIN)) {
     const n = items.filter((i) => i.type === type).length;
     if (n < min) errors.push(`[${type}] 최소 ${min}개 필요 (현재 ${n})`);
+  }
+  const seenText = new Map();
+  for (const item of items) {
+    for (const text of [item.question, item.title].filter(Boolean)) {
+      const key = text.replace(/\s+/g, '');
+      if (seenText.has(key)) err(item.id, `질문/제목이 ${seenText.get(key)}와 중복: "${text}"`);
+      else seenText.set(key, item.id);
+    }
+  }
+  for (const type of TYPES) {
+    for (const topic of TOPICS) {
+      for (const group of groupIds) {
+        const n = items.filter((i) => i.type === type.id && i.topic === topic.id && (i.audience?.[group] ?? 0) > 0).length;
+        if (n < MIN_PER_COMBO) errors.push(`[${type.id}/${topic.id}/${group}] 조합별 최소 ${MIN_PER_COMBO}장 필요 (현재 ${n})`);
+      }
+    }
   }
   return errors;
 }

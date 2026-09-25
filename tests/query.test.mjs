@@ -75,10 +75,15 @@ test('suggests alternatives when nothing matches', () => {
   for (const a of alts) assert.ok(filterContent(fixture, { ...c, ...a.patch }).length === a.count && a.count > 0);
 });
 
-test('every real type × topic × group combination has at least one card in ALL', () => {
+test('every type × topic × group combination has at least 10 cards in ALL', () => {
   for (const type of ['balance', 'talk', 'psych']) for (const topic of ['first', 'some', 'values', 'conflict', 'date', 'future'])
     for (const group of ['couple', 'some', 'solo', 'friends', 'free'])
-      assert.ok(filterContent(items, S({ type, topics: [topic], group })).length > 0, `${type}/${topic}/${group}`);
+      assert.ok(filterContent(items, S({ type, topics: [topic], group })).length >= 10, `${type}/${topic}/${group}`);
+});
+
+test('NEW and HOT lists are never empty for any type × group', () => {
+  for (const type of ['balance', 'talk', 'psych']) for (const group of ['couple', 'some', 'solo', 'friends', 'free'])
+    for (const list of ['new', 'hot']) assert.ok(filterContent(items, S({ type, group, list })).length >= 5, `${type}/${group}/${list}`);
 });
 
 test('sanitizeSettings drops unknown values', () => {
