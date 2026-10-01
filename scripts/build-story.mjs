@@ -9,7 +9,7 @@ import { GROUPS } from '../public/src/content/meta.js';
 
 const BASE = process.env.BASE_URL || 'http://localhost:5173';
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const SITE = 'devlee0908.github.io/dugeun-slot';
+const SITE = 'dugeun-slot.vercel.app';
 const OUT = new URL('../marketing/instagram-story/', import.meta.url);
 
 const items = await loadAll();

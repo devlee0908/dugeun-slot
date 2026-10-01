@@ -9,7 +9,8 @@
 - 로고: 하트 풍선 안에 슬롯 창(●♥●)이 들어간 마크 + 손글씨풍 스티커 워드마크 `두근슬롯`
 - 디자인: 모눈종이 카드, 스티커처럼 외곽선을 두른 제목, 풍선·문·우산·선물 SVG 일러스트, 빨강·분홍·노랑·파랑 포인트 컬러
 
-**배포 주소:** https://devlee0908.github.io/dugeun-slot/ — `main`에 push하면 GitHub Actions(`.github/workflows/pages.yml`)가 테스트 후 `public/`을 자동 배포합니다.
+**배포 주소:** https://dugeun-slot.vercel.app/ — `main`에 push하면 Vercel이 단위 테스트·콘텐츠 검증을 통과한 뒤 `public/`을 자동 배포합니다 (`vercel.json`). 방문 통계는 Vercel 대시보드 → Analytics에서 확인하세요.
+기존 주소 https://devlee0908.github.io/dugeun-slot/ 도 GitHub Actions(`.github/workflows/pages.yml`)로 계속 배포됩니다 (방문 통계는 집계되지 않음).
 
 ## 빠른 실행
 
@@ -31,7 +32,7 @@ npm run dev          # http://localhost:5173  (같은 Wi-Fi의 휴대폰에서�
 | `npm run fonts` | 자체 호스팅 웹폰트(Jua, Pretendard)를 다시 내려받기 |
 | `node scripts/build-assets.mjs` | 앱 아이콘 PNG와 OG 이미지를 다시 생성 |
 
-> 모든 테스트 명령은 `BASE_URL=https://devlee0908.github.io/dugeun-slot`처럼 배포 주소를 대상으로도 실행할 수 있습니다.
+> 모든 테스트 명령은 `BASE_URL=https://dugeun-slot.vercel.app`처럼 배포 주소를 대상으로도 실행할 수 있습니다.
 
 ### 실제 기기 체크리스트
 
