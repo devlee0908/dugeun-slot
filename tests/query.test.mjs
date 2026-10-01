@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { buildDeck, countStatus, drawNext, filterContent, suggestAlternatives } from '../public/src/content/query.js';
 import { sanitizeSettings } from '../public/src/content/meta.js';
 import { loadAll, validate } from '../scripts/validate-content.mjs';
+import { isAnalyticsHost } from '../public/src/analytics.js';
 
 const items = await loadAll();
 const S = (patch) => sanitizeSettings(patch);
@@ -84,6 +85,11 @@ test('every type × topic × group combination has at least 10 cards in ALL', ()
 test('NEW and HOT lists are never empty for any type × group', () => {
   for (const type of ['balance', 'talk', 'psych']) for (const group of ['couple', 'some', 'solo', 'friends', 'free'])
     for (const list of ['new', 'hot']) assert.ok(filterContent(items, S({ type, group, list })).length >= 5, `${type}/${group}/${list}`);
+});
+
+test('analytics loads only on the Vercel host', () => {
+  assert.equal(isAnalyticsHost('dugeun-slot.vercel.app'), true);
+  for (const h of ['localhost', '127.0.0.1', 'devlee0908.github.io', 'vercel.app.evil.com']) assert.equal(isAnalyticsHost(h), false, h);
 });
 
 test('sanitizeSettings drops unknown values', () => {

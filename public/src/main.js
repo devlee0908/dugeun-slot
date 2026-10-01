@@ -8,6 +8,7 @@ import { logoMark, visualMarkup } from './ui/illustrations.js';
 import { runSlot } from './ui/slot.js';
 import { renderShareImage, shareImage } from './ui/share.js';
 import { ding, pop, setSound, tick } from './ui/sound.js';
+import { initAnalytics, trackScreen } from './analytics.js';
 
 const app = document.getElementById('app');
 const repo = createContentRepository();
@@ -41,6 +42,7 @@ function route() {
   else if (r === 'play') renderPlay();
   else renderHome();
   window.scrollTo(0, 0);
+  if ((location.hash.replace(/^#\/?/, '') || 'home') === r) trackScreen(['setup', 'play'].includes(r) ? r : 'home');
 }
 
 const go = (path) => {
@@ -523,6 +525,7 @@ async function boot() {
     </div></div>`;
     return;
   }
+  initAnalytics();
   window.addEventListener('hashchange', route);
   route();
   document.documentElement.classList.add('is-ready');

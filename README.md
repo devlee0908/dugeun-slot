@@ -141,7 +141,7 @@ UI는 `repository.listItems()`로 콘텐츠 배열만 받고, 무엇을 보여�
 빌드 단계가 없습니다. **`public/` 폴더를 그대로 올리면 됩니다.**
 
 - **Netlify**: 새 사이트 → Publish directory `public`, Build command는 비워 둠 (또는 `public` 폴더를 드래그 앤 드롭)
-- **Vercel**: Framework `Other`, Output Directory `public`, Build Command 비움
+- **Vercel (현재 사용)**: 저장소를 Import하면 `vercel.json` 설정이 그대로 적용됩니다 — 설치 단계 없음, 빌드 단계에서 단위 테스트·콘텐츠 검증 실행(실패하면 배포 중단), 배포 폴더 `public`. 대시보드 **Analytics → Enable** 후 다시 배포하면 방문 통계가 쌓입니다.
 - **Cloudflare Pages**: Build output directory `public`
 - **GitHub Pages**: `public/` 내용을 `gh-pages` 브랜치에 올리거나, Actions에서 `public`을 artifact로 배포
 
@@ -154,10 +154,11 @@ UI는 `repository.listItems()`로 콘텐츠 배열만 받고, 무엇을 보여�
 
 ## 개인정보 · 저장 정책
 
-- 서버로 보내는 데이터가 없습니다. 심리테스트 답변과 결과는 저장하지도 전송하지도 않습니다.
+- 심리테스트 답변과 결과, 밸런스 투표, 고른 설정은 저장하지도 전송하지도 않습니다.
+- **익명 방문 통계(Vercel Web Analytics)**: Vercel 도메인(`*.vercel.app`)에서만 켜지며, 어떤 화면(`/`, `/setup`, `/play`)이 열렸는지만 보냅니다. 쿠키를 쓰지 않고, 요청은 같은 사이트의 `/_vercel/insights`로만 갑니다. 로컬 개발과 GitHub Pages에서는 꺼져 있습니다 (`public/src/analytics.js`). 커스텀 도메인을 붙이면 `HOSTS`에 추가하세요.
 - `localStorage`: 마지막 설정, 효과음 on/off
 - 이번 판에서 본 카드와 현재 카드는 메모리에만 두며, 새로고침하거나 처음 화면으로 돌아가면 새 판이 시작됩니다 (이어서 하기 기능 없음).
-- 외부 요청이 전혀 없습니다. 웹폰트(Jua, Pretendard Variable — 둘 다 SIL OFL 1.1)는 `public/assets/fonts/`에 직접 호스팅하며, 글자 범위별로 나뉜 파일 중 화면에 필요한 것만 내려받습니다. 폰트를 갱신하려면 `node scripts/fetch-fonts.mjs`를 실행하세요 (라이선스 파일 포함).
+- 다른 도메인으로 가는 요청이 없습니다. 웹폰트(Jua, Pretendard Variable — 둘 다 SIL OFL 1.1)는 `public/assets/fonts/`에 직접 호스팅하며, 글자 범위별로 나뉜 파일 중 화면에 필요한 것만 내려받습니다. 폰트를 갱신하려면 `node scripts/fetch-fonts.mjs`를 실행하세요 (라이선스 파일 포함).
 
 ## 앞으로: 관리자 화면 · API · DB
 
