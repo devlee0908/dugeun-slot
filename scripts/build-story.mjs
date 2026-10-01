@@ -187,7 +187,11 @@ const browser = await puppeteer.launch({ executablePath: CHROME, headless: true 
 const page = await browser.newPage();
 await page.setViewport({ width: 540, height: 960, deviceScaleFactor: 2 });
 await page.goto(BASE, { waitUntil: 'networkidle0' });
-for (const cut of CUTS) {
+// Optional filter: `npm run story -- 07` (or `ONLY=07`) rebuilds only cuts whose name starts with it.
+const only = process.argv[2] || process.env.ONLY;
+const selected = CUTS.filter((c) => !only || c.name.startsWith(only));
+if (!selected.length) throw new Error(`No story cut matches "${only}"`);
+for (const cut of selected) {
   await page.setContent(page_(cut), { waitUntil: 'load' });
   await page.waitForSelector('body[data-ready="1"]', { timeout: 15000 });
   await new Promise((r) => setTimeout(r, 200));
@@ -195,4 +199,4 @@ for (const cut of CUTS) {
   console.log(`  ✓ ${cut.name}.png`);
 }
 await browser.close();
-console.log(`✓ ${CUTS.length} story cuts (1080×1920) → marketing/instagram-story/`);
+console.log(`✓ ${selected.length} story cut(s) (1080×1920) → marketing/instagram-story/`);
