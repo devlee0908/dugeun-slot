@@ -1,6 +1,6 @@
 // Anonymous page-view counting via Vercel Web Analytics (cookie-less, same-origin /_vercel/insights).
 // Only screen names are sent ('/', '/setup', '/play') — never settings, card ids, votes or psych-test answers.
-// Disabled on localhost, GitHub Pages, any host not listed below, and automated browsers.
+// Disabled on localhost, any host not listed below, and automated browsers.
 
 const HOSTS = [/\.vercel\.app$/];
 
